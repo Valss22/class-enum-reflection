@@ -1,7 +1,7 @@
 <?php
 
-$classToEnumMapper = [
-    TestClass::class => TestEnum::class
+$enumToClassMapper = [
+    TestEnum::class => new TestClass
 ];
 
 enum TestEnum : int 
@@ -10,24 +10,24 @@ enum TestEnum : int
     case two = 2;
 }
 
-// class TestClass
-// {
-//     public $one = 1;
-//     public $two = 2;
-// }
-
-// $props = get_object_vars(new TestClass);
-
-foreach ($classToEnumMapper as $class => $enum)
+class TestClass
 {
-    $reflection = new ReflectionClass($enum);
-    $constants = $reflection->getConstants();
+    public $one = 1;
+    public $two = 2;
+}
 
-    foreach ($constants as $name => $value)
+
+foreach ($enumToClassMapper as $enum => $class)
+{
+    $classVars = get_object_vars(new $class);
+    $enumReflection = new ReflectionClass($enum);
+    $enumCases = $enumReflection->getConstants();
+    
+    foreach ($enumCases as $name => $value)
     {
-        $constants["$name"] = $value->value;
+        $enumCases[$name] = $value->value;
     }
-    echo var_dump($constants);
+    echo $classVars === $enumCases;
 }
 
 ?>
