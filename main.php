@@ -12,10 +12,9 @@ enum TestEnum : int
 
 class TestClass
 {
-    public $one = 1;
     public $two = 2;
+    public $one = 1;
 }
-
 
 foreach ($enumToClassMapper as $enum => $class)
 {
@@ -27,7 +26,18 @@ foreach ($enumToClassMapper as $enum => $class)
     {
         $enumCases[$name] = $value->value;
     }
-    echo $classVars === $enumCases;
+
+    $enumCases = ksort($enumCases);
+    $classVars = ksort($classVars);
+
+    if ($classVars === $enumCases)
+    {
+        echo 'ok!';
+    }
+    else
+    {
+        echo 'error';
+    }
 }
 
 ?>
