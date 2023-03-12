@@ -21,6 +21,8 @@ $errorLogs = [];
 foreach ($enumToClassMapper as $enum => $class)
 {
     $classReflection = new ReflectionClass($class);
+    $className = $classReflection->getName();
+
     $privateProperties = $classReflection->getProperties(ReflectionProperty::IS_PRIVATE);
     $privateValues = [];
 
@@ -39,14 +41,15 @@ foreach ($enumToClassMapper as $enum => $class)
         {
             if (!array_key_exists($name, $enumCases))
             {
-                
-                $errorLogs[] = "название case '$name' в enum '$enum' не правильное";
+                $errorLogs[] = "Константа '$name' в enum '$enum' не определенна в классе '$className'";
             }
             else
             {
-                if ($value !== $enumCases[$name]->value)
+                $enumValue = $enumCases[$name]->value;
+                if ($value !== $enumValue)
                 {
-                    $errorLogs[] = "значение case '$name' в enum '$enum' не совпадает с значением в классе";
+                    $errorLogs[] = "Значение case $name=$enumValue в enum '$enum'
+                     не совпадает с значением в классе '$className' ($name=$value)";
                 }
             }
         }
