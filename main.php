@@ -12,21 +12,30 @@ enum TestEnum : int
 
 class TestClass
 {
-    public $two = 2;
-    public $one = 1;
+    private $two = 2;
+    private $one = 1;
 }
 
 $errorLogs = [];
 
 foreach ($enumToClassMapper as $enum => $class)
 {
-    $classVars = get_object_vars(new $class);
+    $classReflection = new ReflectionClass($class);
+    $privateProperties = $classReflection->getProperties(ReflectionProperty::IS_PRIVATE);
+    $privateValues = [];
+
+    foreach ($privateProperties as $property)
+    {
+        $property->setAccessible(true);
+        $privateValues[$property->getName()] = $property->getValue($class);
+    }
+
     $enumReflection = new ReflectionClass($enum);
     $enumCases = $enumReflection->getConstants();
 
-    if (count($classVars) === count($enumCases))
+    if (count($privateValues) === count($enumCases))
     {
-        foreach ($classVars as $name => $value)
+        foreach ($privateValues as $name => $value)
         {
             if (!array_key_exists($name, $enumCases))
             {
