@@ -23,21 +23,7 @@ foreach ($enumToClassMapper as $enum => $class)
     $classVars = get_object_vars(new $class);
     $enumReflection = new ReflectionClass($enum);
     $enumCases = $enumReflection->getConstants();
-    
-    foreach ($enumCases as $name => $value)
-    {
-        $enumCases[$name] = $value->value;
-    }
 
-    // $enumCases = ksort($enumCases);
-    // $classVars = ksort($classVars);
-
-    // if ($classVars === $enumCases)
-    // {
-    //     echo 'ok!';
-    // }
-    // else
-    $classAttributes = var_dump(...array_keys($classVars));
     if (count($classVars) === count($enumCases))
     {
         foreach ($classVars as $name => $value)
@@ -45,11 +31,18 @@ foreach ($enumToClassMapper as $enum => $class)
             if (!array_key_exists($name, $enumCases))
             {
                 
-                $array[] = "название case '$name' в enum '$enum' не верное. Возможные варианты $classAttributes";
+                $errorLogs[] = "название case '$name' в enum '$enum' не правильное";
+            }
+            else
+            {
+                if ($value !== $enumCases[$name]->value)
+                {
+                    $errorLogs[] = "значение case '$name' в enum '$enum' не совпадает с значением в классе";
+                }
             }
         }
     }
-    echo var_dump(...$array);
+    echo var_dump(...$errorLogs);
 }
 
 ?>
