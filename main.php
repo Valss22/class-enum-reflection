@@ -1,7 +1,7 @@
 <?php
 
 $enumToClassMapper = [
-    TestEnum::class => TestClass::class
+    TestEnum::class => TestClass::class,
 ];
 
 enum TestEnum : int 
@@ -53,7 +53,10 @@ foreach ($enumToClassMapper as $enum => $class)
             $errorLogs[] = "Константа '$name' в классе '$className' должна быть определена в enum '$enum'";
         }
     }
-    echo var_dump(...$errorLogs);
+    if (!empty($errorLogs))
+    {
+        var_dump(...$errorLogs);
+    }
 }
 
 ?>
