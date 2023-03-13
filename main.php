@@ -42,7 +42,7 @@ foreach ($enumToClassMapper as $enum => $class)
             $enumCaseValue = $enumCaseValue->value;
             if ($enumCaseValue !== $classConstValue)
             {
-                $errorLogs[] = "Значение $enumCaseName=$enumCaseValue в enum '$enumCaseValue' не совпадает с значением в классе '$className' ($enumCaseName=$classConstValue)";
+                $errorLogs[] = "Значение $enumCaseName=$enumCaseValue в enum '$enum' не совпадает с значением в классе '$className' ($enumCaseName=$classConstValue)";
             }
         }
     }
