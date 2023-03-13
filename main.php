@@ -1,7 +1,7 @@
 <?php
 
 $enumToClassMapper = [
-    TestEnum::class => new TestClass
+    TestEnum::class => TestClass::class
 ];
 
 enum TestEnum : int 
