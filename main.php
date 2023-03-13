@@ -13,10 +13,10 @@ enum TestEnum : int
 
 class TestClass
 {
-    private $two = 2;
-    private $one = 1;
-    private $four = 4;
-    private $five = 5;
+    const two = 2;
+    const one = 1;
+    const four = 4;
+    const five = 5;
 }
 
 $errorLogs = [];
@@ -25,28 +25,20 @@ foreach ($enumToClassMapper as $enum => $class)
 {
     $classReflection = new ReflectionClass($class);
     $className = $classReflection->getName();
-
-    $privateProperties = $classReflection->getProperties(ReflectionProperty::IS_PRIVATE);
-    $classAttributes = [];
-
-    foreach ($privateProperties as $property)
-    {
-        $property->setAccessible(true);
-        $classAttributes[$property->getName()] = $property->getValue($class);
-    }
+    $classConstants = $classReflection->getConstants();
 
     $enumReflection = new ReflectionClass($enum);
     $enumCases = $enumReflection->getConstants();
 
     foreach ($enumCases as $name => $value)
     {
-        if (!array_key_exists($name, $classAttributes))
+        if (!array_key_exists($name, $classConstants))
         {
-            $errorLogs[] = "Константа '$name' в enum '$enum' не определенна в классе '$className'";
+            $errorLogs[] = "Константа '$name' в enum '$enum' не определена в классе '$className'";
         }
         else
         {
-            $classValue = $classAttributes[$name];
+            $classValue = $classConstants[$name];
             $enumValue = $value->value;
             if ($enumValue !== $classValue)
             {
@@ -54,11 +46,11 @@ foreach ($enumToClassMapper as $enum => $class)
             }
         }
     }
-    foreach ($classAttributes as $name => $value)
+    foreach ($classConstants as $name => $value)
     {
         if (!array_key_exists($name, $enumCases))
         {
-            $errorLogs[] = "Атрибут '$name' в классе '$className' должен быть определен в enum '$enum'";
+            $errorLogs[] = "Константа '$name' в классе '$className' должна быть определена в enum '$enum'";
         }
     }
     echo var_dump(...$errorLogs);
