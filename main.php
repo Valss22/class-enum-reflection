@@ -30,27 +30,27 @@ foreach ($enumToClassMapper as $enum => $class)
     $enumReflection = new ReflectionClass($enum);
     $enumCases = $enumReflection->getConstants();
 
-    foreach ($enumCases as $name => $value)
+    foreach ($enumCases as $enumCaseName => $enumCaseValue)
     {
-        if (!array_key_exists($name, $classConstants))
+        if (!array_key_exists($enumCaseName, $classConstants))
         {
-            $errorLogs[] = "Константа '$name' в enum '$enum' не определена в классе '$className'";
+            $errorLogs[] = "Константа '$enumCaseName' в enum '$enum' не определена в классе '$className'";
         }
         else
         {
-            $classValue = $classConstants[$name];
-            $enumValue = $value->value;
-            if ($enumValue !== $classValue)
+            $classConstValue = $classConstants[$enumCaseName];
+            $enumCaseValue = $enumCaseValue->value;
+            if ($enumCaseValue !== $classConstValue)
             {
-                $errorLogs[] = "Значение $name=$enumValue в enum '$enum' не совпадает с значением в классе '$className' ($name=$classValue)";
+                $errorLogs[] = "Значение $enumCaseName=$enumCaseValue в enum '$enumCaseValue' не совпадает с значением в классе '$className' ($enumCaseName=$classConstValue)";
             }
         }
     }
-    foreach ($classConstants as $name => $value)
+    foreach ($classConstants as $classConstName => $classConstValue)
     {
-        if (!array_key_exists($name, $enumCases))
+        if (!array_key_exists($classConstName, $enumCases))
         {
-            $errorLogs[] = "Константа '$name' в классе '$className' должна быть определена в enum '$enum'";
+            $errorLogs[] = "Константа '$classConstName' в классе '$className' должна быть определена в enum '$enum'";
         }
     }
 }
