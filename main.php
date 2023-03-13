@@ -37,16 +37,16 @@ foreach ($enumToClassMapper as $enum => $class)
 
     if (count($privateValues) === count($enumCases))
     {
-        foreach ($privateValues as $name => $value)
+        foreach ($enumCases as $name => $value)
         {
-            if (!array_key_exists($name, $enumCases))
+            if (!array_key_exists($name, $privateValues))
             {
                 $errorLogs[] = "Константа '$name' в enum '$enum' не определенна в классе '$className'";
             }
             else
             {
-                $enumValue = $enumCases[$name]->value;
-                if ($value !== $enumValue)
+                $classValue = $privateValues[$name];
+                if ($value->value !== $classValue)
                 {
                     $errorLogs[] = "Значение case $name=$enumValue в enum '$enum'
                      не совпадает с значением в классе '$className' ($name=$value)";
